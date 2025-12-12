@@ -3,8 +3,8 @@ import urllib.request
 from pathlib import Path
 
 from nautilus_trader.persistence.catalog import ParquetDataCatalog
+from nautilus_trader.persistence.loaders import CSVTickDataLoader
 from nautilus_trader.persistence.wranglers import QuoteTickDataWrangler
-from nautilus_trader.test_kit.providers import CSVTickDataLoader
 from nautilus_trader.test_kit.providers import TestInstrumentProvider
 
 
