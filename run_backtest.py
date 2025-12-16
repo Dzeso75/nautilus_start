@@ -3,7 +3,11 @@ from nautilus_trader.backtest.node import BacktestNode
 from nautilus_trader.backtest.results import BacktestResult
 from nautilus_trader.backtest.engine import BacktestEngine
 from nautilus_trader.model import Venue
+
 from configs.backtest import get_backtest_config
+from configs.parquet_data import ParquetConfig, PARQUET_RESULTS
+
+data = ParquetConfig(PARQUET_RESULTS)
 
 # Get backtest configuration
 config = get_backtest_config()
@@ -15,9 +19,9 @@ results: list[BacktestResult] = node.run()
 
 # Analyze results
 engine: BacktestEngine = node.get_engine(config.id)
-len(engine.trader.generate_order_fills_report())
-engine.trader.generate_positions_report()
-engine.trader.generate_account_report(Venue("SIM"))
+# len(engine.trader.generate_order_fills_report())
+# engine.trader.generate_positions_report()
+# engine.trader.generate_account_report(Venue("SIM"))
 
 # Get performance statistics]
 
@@ -25,7 +29,33 @@ engine.trader.generate_account_report(Venue("SIM"))
 account = engine.trader.generate_account_report(Venue("SIM"))
 positions = engine.trader.generate_positions_report()
 orders = engine.trader.generate_order_fills_report()
+orders_report = engine.trader.generate_orders_report()
+fills_report = engine.trader.generate_fills_report()
 
+# account.write(data.catalog)
+orders.to_parquet(data.path / "orders.parquet")
+# data.catalog.write_data(orders)
+# data.catalog.write_data(orders_report)
+# data.catalog.write_data(fills_report)
+# data.catalog.write_data(account)
+# data.catalog.write_data(positions)
+
+
+# Access portfolio analyzer
+portfolio = engine.portfolio
+
+# Get different categories of statistics
+stats_pnls = portfolio.analyzer.get_performance_stats_pnls()
+stats_returns = portfolio.analyzer.get_performance_stats_returns()
+stats_general = portfolio.analyzer.get_performance_stats_general()
+
+# stats_pnls.write(data.catalog)
+
+# data.catalog.write_data(stats_pnls)
+# data.catalog.write_data(stats_returns)
+# data.catalog.write_data(stats_general)
+
+# Get the positions and orders
 # Print summary statistics
 print("=== STRATEGY PERFORMANCE ===")
 print(f"Total Orders: {len(orders)}")

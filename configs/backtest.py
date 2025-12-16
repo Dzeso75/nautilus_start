@@ -1,5 +1,4 @@
-from pathlib import Path
-from nautilus_trader.persistence.catalog import ParquetDataCatalog
+from configs.parquet_data import ParquetConfig
 from nautilus_trader.model import QuoteTick
 from nautilus_trader.config import ImportableStrategyConfig
 from nautilus_trader.config import LoggingConfig
@@ -21,12 +20,12 @@ def get_backtest_config():
     )
 
     # Загрузка данных
-    catalog = ParquetDataCatalog(Path("parquet"))
-    instruments = catalog.instruments()
+    data = ParquetConfig()
+    instruments = data.catalog.instruments()
 
     # Конфигурация данных
     data_config = BacktestDataConfig(
-        catalog_path=str(catalog.path),
+        catalog_path=str(data.path),
         data_cls=QuoteTick,
         instrument_id=instruments[0].id,
         end_time="2020-01-10",
