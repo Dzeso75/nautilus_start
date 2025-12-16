@@ -8,4 +8,4 @@ class MACDConfig(StrategyConfig):
     instrument_id: InstrumentId
     fast_period: int = 12
     slow_period: int = 26
-    trade_size: int = 100
+    trade_size: int = 10000
