@@ -137,5 +137,5 @@ dmypy.json
 Thumbs.db
 
 # Project specific
-parquet/data/
-parquet/quote_tick/
+parquet_in/
+parquet_out/
