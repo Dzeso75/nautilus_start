@@ -1,15 +1,4 @@
 # scripts/run_backtest.py
-import sys
-print("🔍 Current Python path:")
-for p in sys.path:
-    print(f"  {p}")
-
-print("\n📦 Loaded modules with 'parquet':")
-for name in list(sys.modules.keys()):
-    if "parquet" in name:
-        print(f"  {name} → {sys.modules[name]}")
-
-
 from nautilus_trader.backtest.node import BacktestNode
 from nautilus_trader.backtest.results import BacktestResult
 from nautilus_trader.backtest.engine import BacktestEngine
