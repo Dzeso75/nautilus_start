@@ -6,9 +6,10 @@ from nautilus_trader.backtest.config import BacktestVenueConfig
 from nautilus_trader.backtest.config import BacktestDataConfig
 from nautilus_trader.backtest.config import BacktestEngineConfig
 from nautilus_trader.backtest.config import BacktestRunConfig
+from nautilus_trader.persistence.config import PersistenceConfig
 
 
-def get_backtest_config():
+def get_backtest_config(data: ParquetConfig, result: ParquetConfig):
 
     # Настройки инструмента
     venue_config = BacktestVenueConfig(
@@ -20,7 +21,8 @@ def get_backtest_config():
     )
 
     # Загрузка данных
-    data = ParquetConfig()
+    # data = ParquetConfig()
+    # result = ParquetConfig(PARQUET_RESULTS)
     instruments = data.catalog.instruments()
 
     # Конфигурация данных
@@ -31,8 +33,16 @@ def get_backtest_config():
         end_time="2020-01-10",
     )
 
+    # Настройка сохранения
+    persistence = PersistenceConfig(
+        catalog_path=str(result.path),  # путь к папке Parquet
+        fs_protocol="file",              # локальная файловая система
+        # fs_storage_options={}         # опции для S3 и т.д. (не нужны для локального диска)
+    )
+
     # Конфигурация движка
     engine_config = BacktestEngineConfig(
+        persistence=persistence, 
         strategies=[
             ImportableStrategyConfig(
                 strategy_path="strategies.macd:MACDStrategy",

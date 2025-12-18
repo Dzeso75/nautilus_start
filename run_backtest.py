@@ -1,16 +1,28 @@
 # scripts/run_backtest.py
+import sys
+print("🔍 Current Python path:")
+for p in sys.path:
+    print(f"  {p}")
+
+print("\n📦 Loaded modules with 'parquet':")
+for name in list(sys.modules.keys()):
+    if "parquet" in name:
+        print(f"  {name} → {sys.modules[name]}")
+
+
 from nautilus_trader.backtest.node import BacktestNode
 from nautilus_trader.backtest.results import BacktestResult
 from nautilus_trader.backtest.engine import BacktestEngine
 from nautilus_trader.model import Venue
 
 from configs.backtest import get_backtest_config
-from configs.parquet_data import ParquetConfig, PARQUET_RESULTS
+from configs.parquet_data import ParquetConfig, PARQUET_RESULTS, PARQUET_DATA
 
-data = ParquetConfig(PARQUET_RESULTS)
+data = ParquetConfig(PARQUET_DATA, "data")
+results = ParquetConfig(PARQUET_RESULTS, "22")
 
 # Get backtest configuration
-config = get_backtest_config()
+config = get_backtest_config(data, results)
 node = BacktestNode(configs=[config])
 
 # Runs one or many configs synchronously
@@ -33,13 +45,12 @@ orders_report = engine.trader.generate_orders_report()
 fills_report = engine.trader.generate_fills_report()
 
 # account.write(data.catalog)
-orders.to_parquet(data.path / "orders.parquet")
-# data.catalog.write_data(orders)
-# data.catalog.write_data(orders_report)
+# orders.to_parquet(data.path / "orders.parquet")
+# orders_report.to_parquet(data.path / "orders_report.parquet")
 # data.catalog.write_data(fills_report)
-# data.catalog.write_data(account)
-# data.catalog.write_data(positions)
-
+# # fills_report.to_parquet(data.path / "fills_report.parquet")
+# account.to_parquet(data.path / "account.parquet")
+# positions.to_parquet(data.path / "positions.parquet")
 
 # Access portfolio analyzer
 portfolio = engine.portfolio
@@ -49,6 +60,9 @@ stats_pnls = portfolio.analyzer.get_performance_stats_pnls()
 stats_returns = portfolio.analyzer.get_performance_stats_returns()
 stats_general = portfolio.analyzer.get_performance_stats_general()
 
+# stats_pnls.to_parquet(data.path / "stats_pnls.parquet")
+# stats_returns.to_parquet(data.path / "stats_returns.parquet")
+# stats_general.to_parquet(data.path / "stats_general.parquet")
 # stats_pnls.write(data.catalog)
 
 # data.catalog.write_data(stats_pnls)

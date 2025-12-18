@@ -5,9 +5,9 @@ from nautilus_trader.persistence.loaders import CSVTickDataLoader
 from nautilus_trader.persistence.wranglers import QuoteTickDataWrangler
 from nautilus_trader.test_kit.providers import TestInstrumentProvider
 
-from configs.parquet_data import ParquetConfig
+from configs.parquet_data import ParquetConfig, PARQUET_DATA
 
-data = ParquetConfig()
+data = ParquetConfig(PARQUET_DATA, "data")
 
 print(f"Catalog directory: {data.path}")
 
